@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download de Documento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Fundo cinza bem clarinho */
+            background-color: #f9fafb;
+            /* Tela fixa, sem scroll */
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <!-- Container principal centralizado -->
+    <div class="flex flex-col items-center justify-center p-8 sm:p-12 md:p-16 w-full max-w-lg bg-white rounded-xl shadow-2xl transition-all duration-300 transform scale-100 hover:scale-[1.01]">
+        
+        <!-- Frase no meio da tela -->
+        <p class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-8 text-gray-800 text-center leading-tight">
+            Leia o meu trabalho em PDF
+        </p>
+
+        <!-- Botão para Baixar o PDF -->
+        <button 
+            id="downloadButton"
+            onclick="handleDownload()"
+            class="w-full sm:w-auto px-10 py-4 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-150 ease-in-out transform hover:scale-[1.05] active:scale-100"
+        >
+            Baixe o PDF
+        </button>
+
+        <!-- Mensagem de feedback (exibe o status do download) -->
+        <div id="feedbackMessage" class="mt-6 p-3 text-sm text-green-700 bg-green-100 border border-green-200 rounded-md hidden">
+            Comando de download enviado ao navegador!
+        </div>
+
+    </div>
+
+    <script>
+        // *** EDITAR AQUI: COLOQUE O CAMINHO OU URL DO SEU PDF ***
+        const pdfPath = './O PRUMO DE AMÓS.pdf';
+        
+        function handleDownload() {
+            const button = document.getElementById('downloadButton');
+            const feedback = document.getElementById('feedbackMessage');
+            const originalText = button.textContent;
+            
+            // 1. Feedback visual imediato
+            button.disabled = true;
+            button.textContent = 'Preparando...';
+            button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            button.classList.add('bg-blue-400', 'cursor-not-allowed');
+            
+            feedback.textContent = `Iniciando download do arquivo.`;
+            feedback.classList.remove('hidden');
+
+            // 2. Cria um link dinâmico para forçar o download
+            const link = document.createElement('a');
+            link.href = pdfPath;
+            link.download = pdfPath.substring(pdfPath.lastIndexOf('/') + 1) || 'documento.pdf'; // Usa o nome do arquivo após a última barra
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // 3. Restaura o estado do botão
+            setTimeout(() => {
+                button.disabled = false;
+                button.textContent = originalText;
+                button.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                button.classList.remove('bg-blue-400', 'cursor-not-allowed');
+
+                feedback.textContent = 'Download concluído ou iniciado!';
+                
+                setTimeout(() => {
+                    feedback.classList.add('hidden');
+                }, 3000);
+
+            }, 500);
+        }
+    </script>
+</body>
+</html>
